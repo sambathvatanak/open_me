@@ -233,7 +233,9 @@ class _ListProvinceState extends State<ListProvince> {
       margin: EdgeInsets.all(10.0),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10.0),
-        child: Image.asset(image != null ? image : 'assets/image/BTC.jpg'),
+        child: FittedBox(
+            fit: BoxFit.fill,
+            child: Image.asset(image != null ? image : 'assets/image/BTC.jpg')),
       ),
     );
   }

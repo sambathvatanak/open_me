@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:province_cambodia/model/provinceContent.dart';
 import 'package:province_cambodia/provider/themeChanger.dart';
+import 'package:province_cambodia/screen/favorite.dart';
 import 'package:province_cambodia/screen/list_province.dart';
 import 'package:province_cambodia/screen/login.dart';
+import 'package:province_cambodia/screen/map.dart';
 
 class homePage extends StatefulWidget {
   @override
@@ -15,9 +17,9 @@ class homePage extends StatefulWidget {
 int _page = 0;
 bool isSwitched = false;
 GlobalKey _bottomNavigationKey = GlobalKey();
+var save = 0;
 
 class _homePageState extends State<homePage> {
-
   // ignore: deprecated_member_use
   List<ProvinceContent> _province = List<ProvinceContent>();
   // ignore: deprecated_member_use
@@ -39,9 +41,8 @@ class _homePageState extends State<homePage> {
     final List<Widget> _botNavList = [
       _homeScreen(context),
       ListProvince(),
-      _provinceContent(),
-      _provinceContent(),
-      //home(),
+      Favorite(),
+      ProvinceMap(),
       Login(),
     ];
     return Scaffold(
@@ -52,11 +53,31 @@ class _homePageState extends State<homePage> {
         index: 0,
         height: 50.0,
         items: <Widget>[
-          Icon(Icons.home, size: 30, color: Color(0xff4C9BE2),),
-          Icon(Icons.list, size: 30, color: Color(0xff4C9BE2),),
-          Icon(Icons.favorite_rounded, size: 30, color: Color(0xff4C9BE2),),
-          Icon(Icons.map_rounded, size: 30, color: Color(0xff4C9BE2),),
-          Icon(Icons.perm_identity, size: 30, color: Color(0xff4C9BE2),),
+          Icon(
+            Icons.home,
+            size: 30,
+            color: Color(0xff4C9BE2),
+          ),
+          Icon(
+            Icons.list,
+            size: 30,
+            color: Color(0xff4C9BE2),
+          ),
+          Icon(
+            Icons.favorite_rounded,
+            size: 30,
+            color: Color(0xff4C9BE2),
+          ),
+          Icon(
+            Icons.map_rounded,
+            size: 30,
+            color: Color(0xff4C9BE2),
+          ),
+          Icon(
+            Icons.perm_identity,
+            size: 30,
+            color: Color(0xff4C9BE2),
+          ),
         ],
         color: Theme.of(context).bottomAppBarColor,
         buttonBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -73,24 +94,24 @@ class _homePageState extends State<homePage> {
     );
   }
 
-Widget _homeScreen(context){
-  return Scaffold(
-    appBar: AppBar(
-      title: Text('Welcome'),
-    ),
-    drawer: _drawerMenu(context),
-    body: Container(
-      child: ListView(
-        children: [
-          _imageSlider(),
-          _title(context),
-          _searchBar(context),
-          _provinceContent(),
-        ],
+  Widget _homeScreen(context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Welcome'),
       ),
-    ),
-  );
-}
+      drawer: _drawerMenu(context),
+      body: Container(
+        child: ListView(
+          children: [
+            _imageSlider(),
+            _title(context),
+            _searchBar(context),
+            _provinceContent(),
+          ],
+        ),
+      ),
+    );
+  }
 
   Widget _drawerMenu(context) {
     final themeChanger = Provider.of<ThemeChanger>(context);
@@ -113,8 +134,7 @@ Widget _homeScreen(context){
               ),
             ),
             ListTile(
-              leading:
-              Icon(Icons.settings, size: 26, color: Color(0xff4C9BE2)),
+              leading: Icon(Icons.settings, size: 26, color: Color(0xff4C9BE2)),
               title: Text("Settings"),
               onTap: () {
                 Navigator.pop(context);
@@ -151,7 +171,9 @@ Widget _homeScreen(context){
                       onChanged: (value) {
                         setState(() {
                           isSwitched = value;
-                          isSwitched ? themeChanger.setTheme(ThemeMode.dark) : themeChanger.setTheme(ThemeMode.light);
+                          isSwitched
+                              ? themeChanger.setTheme(ThemeMode.dark)
+                              : themeChanger.setTheme(ThemeMode.light);
                         });
                       },
                       activeTrackColor: Colors.blueAccent[200],
@@ -165,7 +187,7 @@ Widget _homeScreen(context){
     );
   }
 
-  Widget _title(context){
+  Widget _title(context) {
     return Container(
       padding: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
       child: Text(
@@ -202,7 +224,8 @@ Widget _homeScreen(context){
               Future.delayed(Duration.zero, () {
                 // Navigator.pop(context, '/home');
                 //Navigator.pushNamed(context, '/SearchResult');
-                final CurvedNavigationBar navigationBar = _bottomNavigationKey.currentWidget;
+                final CurvedNavigationBar navigationBar =
+                    _bottomNavigationKey.currentWidget;
                 navigationBar.onTap(1);
               });
             },
@@ -252,105 +275,218 @@ Widget _homeScreen(context){
     );
   }
 
-  Widget _provinceContent(){
+  Widget _provinceContent() {
     return Container(
         margin: EdgeInsets.symmetric(vertical: 20),
         padding: EdgeInsets.only(left: 12.0),
-        height: 380,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: getProvinceContent.length,
-          itemBuilder:(context,index){
-            return Stack(
-              alignment: Alignment.topLeft,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 10,horizontal: 5),
-                      width: 240,
-                      //height: 120,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
-                        child: Container(
-                          //color: Colors.red,
-                          child: Image.asset(
-                            '${getProvinceContent[index].image}',
-                            width: MediaQuery.of(context).size.width,
-                            fit: BoxFit.fitWidth,
-                          ),
+        //height: 380,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              margin: EdgeInsets.only(left: 5.0),
+              child: Text(
+                'Most Viewed',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            Container(
+              height: 200,
+              child: FutureBuilder(
+                future: fetchProvinceContent(),
+                builder: (context, AsyncSnapshot snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(child: CircularProgressIndicator());
+                  } else {
+                    return Container(
+                      child: RefreshIndicator(
+                        onRefresh: () {},
+                        child: _listViewContent(),
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
+          ],
+        ));
+  }
+
+  Widget _listViewContent(){
+    return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: _provinceDisplay.length,
+      itemBuilder:(context,index){
+        return Stack(
+          alignment: Alignment.topLeft,
+          children: [
+            Container(
+              margin: EdgeInsets.all(5.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    width: 240,
+                    height: 150,
+                    decoration: new BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: Colors.white,
+                      image: DecorationImage(
+                        image: AssetImage(pvc.getImage(_provinceDisplay[index].latin)),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            save < 1
+                                ? Container(
+                              width: 26,
+                              height: 24,
+                              margin: EdgeInsets.all(10.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(30.0)),
+                              ),
+                              child: IconButton(
+                                padding: EdgeInsets.all(0.0),
+                                iconSize: 19.0,
+                                icon: Icon(
+                                  Icons.favorite_border_rounded,
+                                  color: Color(0xff4C9BE2),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    save = 1;
+                                  });
+                                },
+                              ),
+                            )
+                                : Container(
+                              width: 26,
+                              height: 24,
+                              margin: EdgeInsets.all(10.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(30.0)),
+                              ),
+                              child: IconButton(
+                                padding: EdgeInsets.all(0.0),
+                                iconSize: 19.0,
+                                icon: Icon(
+                                  Icons.favorite_rounded,
+                                  color: Color(0xff4C9BE2),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    save = 0;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left: 5.0, top: 10.0),
+                      child: Text(
+                        //getProvinceContent[index].latin,
+                        _provinceDisplay[index].latin,
+                        style: TextStyle(
+                          color: Colors.grey[800],
+                          fontSize: 15,
                         ),
                       ),
                     ),
-                  ],
-                ),
-                Container(
-                  margin: EdgeInsets.all(20.0),
-                  padding: EdgeInsets.all(6.0),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).bottomAppBarColor,
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  ),
-                  child: Text(
-                    getProvinceContent[index].latin,
-                  ),
-                ),
-              ],
-            );
-          },
-        )
+                ],
+              ),
+            ),
+            // Container(
+            //   margin: EdgeInsets.all(20.0),
+            //   padding: EdgeInsets.all(6.0),
+            //   decoration: BoxDecoration(
+            //     color: Theme.of(context).bottomAppBarColor,
+            //     borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            //   ),
+            //   child: Icon(Icons.favorite_border_rounded, size: 15,)
+            // ),
+          ],
+        );
+      },
     );
   }
 
 }
 
-final List<String> imgList = ['assets/image/KP.jpg', 'assets/image/TBK.jpg', 'assets/image/KPC.jpg',
-  'assets/image/BTB.jpg', 'assets/image/BTC.jpg', 'assets/image/KD.jpg',
-  'assets/image/KJ.jpg', 'assets/image/KEP.jpg', 'assets/image/KPCH.jpg',
-  'assets/image/KPS.jpg', 'assets/image/KPT.jpg', 'assets/image/KS.jpg',
-  'assets/image/MDK.jpg', 'assets/image/ODC.jpg', 'assets/image/ST.jpg'];
-final List<Widget> imageSliders = imgList.map((item) => Container(
-  child: Container(
-    margin: EdgeInsets.only(left: 5.0, right: 5.0, bottom: 5.0),
-    child: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(5.0)),
-        child: Stack(
-          children: <Widget>[
-            Image.asset(item, fit: BoxFit.cover, width: 1000.0),
-            Positioned(
-              bottom: 0.0,
-              left: 0.0,
-              right: 0.0,
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color.fromARGB(200, 0, 0, 0),
-                      Color.fromARGB(0, 0, 0, 0)
-                    ],
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                  ),
-                ),
-                padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                // child: Text(
-                //   'No. ${imgList.indexOf(item)} image',
-                //   style: TextStyle(
-                //     color: Colors.white,
-                //     fontSize: 20.0,
-                //     fontWeight: FontWeight.bold,
-                //   ),
-                // ),
-              ),
-            ),
-          ],
-        )
-    ),
-  ),
-)).toList();
+final List<String> imgList = [
+  'assets/image/KP.jpg',
+  'assets/image/TBK.jpg',
+  'assets/image/KPC.jpg',
+  'assets/image/BTB.jpg',
+  'assets/image/BTC.jpg',
+  'assets/image/KD.jpg',
+  'assets/image/KJ.jpg',
+  'assets/image/KEP.jpg',
+  'assets/image/KPCH.jpg',
+  'assets/image/KPS.jpg',
+  'assets/image/KPT.jpg',
+  'assets/image/KS.jpg',
+  'assets/image/MDK.jpg',
+  'assets/image/ODC.jpg',
+  'assets/image/ST.jpg'
+];
+final List<Widget> imageSliders = imgList
+    .map((item) => Container(
+          child: Container(
+            margin: EdgeInsets.only(left: 5.0, right: 5.0, bottom: 5.0),
+            child: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                child: Stack(
+                  children: <Widget>[
+                    Image.asset(item, fit: BoxFit.cover, width: 1000.0),
+                    Positioned(
+                      bottom: 0.0,
+                      left: 0.0,
+                      right: 0.0,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Color.fromARGB(200, 0, 0, 0),
+                              Color.fromARGB(0, 0, 0, 0)
+                            ],
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                          ),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                            vertical: 10.0, horizontal: 20.0),
+                        // child: Text(
+                        //   'No. ${imgList.indexOf(item)} image',
+                        //   style: TextStyle(
+                        //     color: Colors.white,
+                        //     fontSize: 20.0,
+                        //     fontWeight: FontWeight.bold,
+                        //   ),
+                        // ),
+                      ),
+                    ),
+                  ],
+                )),
+          ),
+        ))
+    .toList();
 
-Widget _imageSlider(){
+Widget _imageSlider() {
   return Container(
     height: 280,
     child: CarouselSlider(
@@ -365,7 +501,3 @@ Widget _imageSlider(){
     ),
   );
 }
-
-
-
-
