@@ -12,6 +12,8 @@ class ProvinceContent{
   String south;
   String north;
   static int index;
+  static int indexCommune;
+  static int indexVillage;
 
   ProvinceContent({this.image, this.code, this.khmer, this.latin, this.east, this.west, this.north, this.south});
 
@@ -31,13 +33,23 @@ class ProvinceContent{
     latin = json['latin'].toString();
   }
 
-  ProvinceContent.getIndex(dynamic num){
+  ProvinceContent.getIndex(dynamic num, {dynamic communeIndex, dynamic villageIndex,}){
     index = num;
-    print(index);
+    indexCommune = communeIndex;
+    indexVillage = villageIndex;
+    //print(index);
   }
 
   int getNum(){
     return index;
+  }
+
+  int getNumCommune(){
+    return indexCommune;
+  }
+
+  int getNumVillage(){
+    return indexVillage;
   }
 
   String getImage(title){
@@ -111,6 +123,7 @@ Future<List<ProvinceContent>> fetchProvinceContent() async {
       province.add(ProvinceContent.fromJsonProvince(json));
     }
   }
+  print(province.length);
   return province;
 }
 
@@ -129,16 +142,37 @@ Future<List<ProvinceContent>> fetchDistrictContent() async {
   return district;
 }
 
-Future<List<dynamic>> fetchCommuneContent() async {
+Future<List<ProvinceContent>> fetchCommuneContent() async {
   var response = await rootBundle.loadString('assets/data/cambodia_gazetteer.json');
-  var communeJson = json.decode(response);
-  return communeJson[0]['districts'][0]['communes'];
+  int index = pvc.getNum();
+  int indexCommune = pvc.getNumCommune();
+  // ignore: deprecated_member_use
+  var commune = List<ProvinceContent>();
+  if (response != '') {
+    var provinceJson = json.decode(response);
+    provinceJson = provinceJson[index]['districts'][indexCommune]['communes'];
+    for (var json in provinceJson) {
+      commune.add(ProvinceContent.fromJsonOther(json));
+    }
+  }
+  return commune;
 }
 
-Future<List<dynamic>> fetchVillageContent() async {
+Future<List<ProvinceContent>> fetchVillageContent() async {
   var response = await rootBundle.loadString('assets/data/cambodia_gazetteer.json');
-  var villageJson = json.decode(response);
-  return villageJson[0]['districts'][0]['communes'][0]['villages'];
+  int index = pvc.getNum();
+  int indexCommune = pvc.getNumCommune();
+  int indexVillage = pvc.getNumVillage();
+  // ignore: deprecated_member_use
+  var village = List<ProvinceContent>();
+  if (response != '') {
+    var provinceJson = json.decode(response);
+    provinceJson = provinceJson[index]['districts'][indexCommune]['communes'][indexVillage]['villages'];
+    for (var json in provinceJson) {
+      village.add(ProvinceContent.fromJsonOther(json));
+    }
+  }
+  return village;
 }
 
 List<ProvinceContent> getProvinceContent = [

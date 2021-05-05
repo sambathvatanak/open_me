@@ -176,9 +176,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
           ),
           Text(
             widget.provinceName,
-            style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.w600),
+            style: TextStyle(fontSize: 26, fontWeight: FontWeight.w600, color: Colors.grey[800],),
           ),
         ],
       ),
@@ -223,6 +221,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w600,
+                          color: Colors.grey[800],
                         ),
                       ),
                     ),
@@ -246,8 +245,10 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
                   child: Text(
                     'Banteay Meanchey is a province of Cambodia located in the far northwest. It borders the provinces of Oddar Meanchey and Siem Reap to the east, Battambang to the south, and shares an international border with Thailand to the west. Its capital and largest city is Serei Saophoan.',
                     style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey.shade600,
+                    ),
                     textAlign: TextAlign.justify,
                   ),
                 ),
@@ -296,6 +297,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 20,
+                      color: Colors.grey[800],
                     ),
                   ),
                 ),
@@ -327,6 +329,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 15,
+                          color: Colors.grey[800],
                         ),
                       ),
                     ),
@@ -349,6 +352,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 15,
+                          color: Colors.grey[800],
                         ),
                       ),
                     ),
@@ -368,6 +372,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 15,
+                          color: Colors.grey[600],
                         ),
                       ),
                     ),
@@ -382,6 +387,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 15,
+                          color: Colors.grey[600],
                         ),
                       ),
                     ),
@@ -409,6 +415,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 15,
+                          color: Colors.grey[800],
                         ),
                       ),
                     ),
@@ -417,7 +424,8 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
                 Row(
                   children: [
                     Container(
-                      margin: EdgeInsets.only(left: 16.5, top: 10.0, bottom: 10.0, right: 10.0),
+                      margin: EdgeInsets.only(
+                          left: 16.5, top: 10.0, bottom: 10.0, right: 10.0),
                       child: Icon(
                         Icons.explore_outlined,
                         size: 24,
@@ -431,6 +439,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 15,
+                          color: Colors.grey[800],
                         ),
                       ),
                     ),
@@ -450,6 +459,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 15,
+                          color: Colors.grey[600],
                         ),
                       ),
                     ),
@@ -464,6 +474,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 15,
+                          color: Colors.grey[600],
                         ),
                       ),
                     ),
@@ -506,6 +517,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
             MaterialPageRoute(
               builder: (context) => DistrictDetail(
                 index: num - 1,
+                provinceName: widget.provinceName,
               ),
             ),
           );
@@ -520,11 +532,12 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
                 children: [
                   // Icon(Icons.location_on_outlined, size: 40, color: Color(0xff263882),),
                   Text(
-                    'List of Disctrict',
+                    'View district of ' + widget.provinceName,
                     style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                       ),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey[800],
+                    ),
                   ),
                 ],
               ),

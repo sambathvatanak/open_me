@@ -303,7 +303,7 @@ class _homePageState extends State<homePage> {
                   } else {
                     return Container(
                       child: RefreshIndicator(
-                        onRefresh: () {},
+                        onRefresh: fetchProvinceContent,
                         child: _listViewContent(),
                       ),
                     );

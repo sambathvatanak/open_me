@@ -14,6 +14,8 @@ class _ListProvinceState extends State<ListProvince> {
   // ignore: deprecated_member_use
   List<ProvinceContent> _province = List<ProvinceContent>();
   // ignore: deprecated_member_use
+  List<ProvinceContent> _district = List<ProvinceContent>();
+  // ignore: deprecated_member_use
   List<ProvinceContent> _provinceDisplay = List<ProvinceContent>();
   ProvinceContent pvc = new ProvinceContent();
   var image;
@@ -171,6 +173,7 @@ class _ListProvinceState extends State<ListProvince> {
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 18,
+                        color: Colors.grey.shade800
                       ),
                     ),
                   ),
@@ -180,18 +183,19 @@ class _ListProvinceState extends State<ListProvince> {
                       _provinceDisplay[index].latin,
                       //snapshot.data[index]['latin'],
                       style: TextStyle(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w500,
                         fontSize: 18,
+                          color: Colors.grey.shade600
                       ),
                     ),
                   ),
                   Expanded(
                     flex: 1,
                     child: Text(
-                      'District: 19',
+                      'District: ' + _district.length.toString(),
                       //snapshot.data[index]['districts'][index]['khmer'],
                       style: TextStyle(
-                        //fontWeight: FontWeight.bold,
+                        color: Colors.grey.shade600,
                         fontSize: 15,
                       ),
                     ),
@@ -201,7 +205,7 @@ class _ListProvinceState extends State<ListProvince> {
                     child: Text(
                       'Commune: 20',
                       style: TextStyle(
-                        //fontWeight: FontWeight.bold,
+                        color: Colors.grey.shade600,
                         fontSize: 15,
                       ),
                     ),
@@ -211,7 +215,7 @@ class _ListProvinceState extends State<ListProvince> {
                     child: Text(
                       'Village: 30',
                       style: TextStyle(
-                        //fontWeight: FontWeight.bold,
+                        color: Colors.grey.shade600,
                         fontSize: 15,
                       ),
                     ),
