@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MITE</string>
+    <string name="facebook_app_id">625677902164822</string>
+    <string name="fb_login_protocol_scheme">fb625677902164822</string>
+</resources>

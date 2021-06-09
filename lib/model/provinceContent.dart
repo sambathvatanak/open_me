@@ -1,6 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/services.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'package:province_cambodia/provider/favoriteBloc.dart';
 
 class ProvinceContent{
   String image;
@@ -113,27 +116,28 @@ class ProvinceContent{
 ProvinceContent pvc = ProvinceContent();
 
 Future<List<ProvinceContent>> fetchProvinceContent() async {
-  var response =
-  await rootBundle.loadString('assets/data/cambodia_gazetteer.json');
+  var url = ('https://raw.githubusercontent.com/sambathvatanak/province_cambodia/master/assets/data/cambodia_gazetteer.json');
+  var response = await http.get(Uri.parse(url));
   // ignore: deprecated_member_use
   var province = List<ProvinceContent>();
-  if (response != '') {
-    var provinceJson = json.decode(response);
+  if(response.statusCode == 200) {
+    var provinceJson = json.decode(response.body);
     for (var json in provinceJson) {
       province.add(ProvinceContent.fromJsonProvince(json));
     }
   }
-  print(province.length);
+  //print(province.length);
   return province;
 }
 
 Future<List<ProvinceContent>> fetchDistrictContent() async {
-  var response = await rootBundle.loadString('assets/data/cambodia_gazetteer.json');
+  var url = ('https://raw.githubusercontent.com/sambathvatanak/province_cambodia/master/assets/data/cambodia_gazetteer.json');
+  var response = await http.get(Uri.parse(url));
   int index = pvc.getNum();
   // ignore: deprecated_member_use
   var district = List<ProvinceContent>();
-  if (response != '') {
-    var provinceJson = json.decode(response);
+  if (response.statusCode == 200) {
+    var provinceJson = json.decode(response.body);
     provinceJson = provinceJson[index]['districts'];
     for (var json in provinceJson) {
       district.add(ProvinceContent.fromJsonOther(json));
@@ -143,13 +147,14 @@ Future<List<ProvinceContent>> fetchDistrictContent() async {
 }
 
 Future<List<ProvinceContent>> fetchCommuneContent() async {
-  var response = await rootBundle.loadString('assets/data/cambodia_gazetteer.json');
+  var url = ('https://raw.githubusercontent.com/sambathvatanak/province_cambodia/master/assets/data/cambodia_gazetteer.json');
+  var response = await http.get(Uri.parse(url));
   int index = pvc.getNum();
   int indexCommune = pvc.getNumCommune();
   // ignore: deprecated_member_use
   var commune = List<ProvinceContent>();
-  if (response != '') {
-    var provinceJson = json.decode(response);
+  if (response.statusCode == 200) {
+    var provinceJson = json.decode(response.body);
     provinceJson = provinceJson[index]['districts'][indexCommune]['communes'];
     for (var json in provinceJson) {
       commune.add(ProvinceContent.fromJsonOther(json));
@@ -159,14 +164,15 @@ Future<List<ProvinceContent>> fetchCommuneContent() async {
 }
 
 Future<List<ProvinceContent>> fetchVillageContent() async {
-  var response = await rootBundle.loadString('assets/data/cambodia_gazetteer.json');
+  var url = ('https://raw.githubusercontent.com/sambathvatanak/province_cambodia/master/assets/data/cambodia_gazetteer.json');
+  var response = await http.get(Uri.parse(url));
   int index = pvc.getNum();
   int indexCommune = pvc.getNumCommune();
   int indexVillage = pvc.getNumVillage();
   // ignore: deprecated_member_use
   var village = List<ProvinceContent>();
-  if (response != '') {
-    var provinceJson = json.decode(response);
+  if (response.statusCode == 200) {
+    var provinceJson = json.decode(response.body);
     provinceJson = provinceJson[index]['districts'][indexCommune]['communes'][indexVillage]['villages'];
     for (var json in provinceJson) {
       village.add(ProvinceContent.fromJsonOther(json));

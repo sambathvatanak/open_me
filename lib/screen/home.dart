@@ -1,8 +1,15 @@
+import 'dart:async';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:province_cambodia/model/provinceContent.dart';
+import 'package:province_cambodia/model/userProfile.dart';
+import 'package:province_cambodia/provider/authBloc.dart';
+import 'package:province_cambodia/provider/favoriteBloc.dart';
 import 'package:province_cambodia/provider/themeChanger.dart';
 import 'package:province_cambodia/screen/favorite.dart';
 import 'package:province_cambodia/screen/list_province.dart';
@@ -14,18 +21,24 @@ class homePage extends StatefulWidget {
   _homePageState createState() => _homePageState();
 }
 
-int _page = 0;
-bool isSwitched = false;
-GlobalKey _bottomNavigationKey = GlobalKey();
-var save = 0;
-
 class _homePageState extends State<homePage> {
   // ignore: deprecated_member_use
   List<ProvinceContent> _province = List<ProvinceContent>();
   // ignore: deprecated_member_use
   List<ProvinceContent> _provinceDisplay = List<ProvinceContent>();
   ProvinceContent pvc = new ProvinceContent();
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  StreamSubscription<User> homeStateSubscription;
   var image;
+  UserData user = new UserData();
+  int _page = 0;
+  bool isSwitched = false;
+  GlobalKey _bottomNavigationKey = GlobalKey();
+  var save = 0;
+  var fbUserNew;
+  String name;
+  String email;
+  String picture;
 
   @override
   void initState() {
@@ -34,6 +47,23 @@ class _homePageState extends State<homePage> {
       _province.addAll(value);
       _provinceDisplay = _province;
     });
+    var authBloc = Provider.of<AuthBloc>(context,listen: false);
+    homeStateSubscription = authBloc.currentUser.listen((fbUser) {
+      setState(() {
+        if (fbUser != null){
+          fbUserNew = fbUser;
+          name = fbUser.displayName;
+          email = fbUser.email;
+          picture = fbUser.photoURL;
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    homeStateSubscription.cancel();
+    super.dispose();
   }
 
   @override
@@ -41,9 +71,9 @@ class _homePageState extends State<homePage> {
     final List<Widget> _botNavList = [
       _homeScreen(context),
       ListProvince(),
-      Favorite(),
+      saveFavorite(),
       ProvinceMap(),
-      Login(),
+      // Login(),
     ];
     return Scaffold(
       body: _botNavList[_page],
@@ -73,11 +103,11 @@ class _homePageState extends State<homePage> {
             size: 30,
             color: Color(0xff4C9BE2),
           ),
-          Icon(
-            Icons.perm_identity,
-            size: 30,
-            color: Color(0xff4C9BE2),
-          ),
+          // Icon(
+          //   Icons.perm_identity,
+          //   size: 30,
+          //   color: Color(0xff4C9BE2),
+          // ),
         ],
         color: Theme.of(context).bottomAppBarColor,
         buttonBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -114,6 +144,7 @@ class _homePageState extends State<homePage> {
   }
 
   Widget _drawerMenu(context) {
+    var authBloc = Provider.of<AuthBloc>(context);
     final themeChanger = Provider.of<ThemeChanger>(context);
     return Container(
       width: MediaQuery.of(context).size.width * 0.6,
@@ -123,14 +154,11 @@ class _homePageState extends State<homePage> {
           padding: EdgeInsets.zero,
           children: <Widget>[
             UserAccountsDrawerHeader(
-              accountName: Text("Vatanak Sambath"),
-              accountEmail: Text("sambathvatanak@gmail.com"),
+              accountName: name == null ? Text('no name') : Text(name),
+              accountEmail: email == null ? Text('no email') : Text(email),
               currentAccountPicture: CircleAvatar(
                 backgroundColor: Colors.orange,
-                child: Text(
-                  "VS",
-                  style: TextStyle(fontSize: 24.0),
-                ),
+                backgroundImage: picture == null ? AssetImage('assets/image/KP.jpg') : NetworkImage(picture)
               ),
             ),
             ListTile(
@@ -180,7 +208,36 @@ class _homePageState extends State<homePage> {
                       activeColor: Colors.grey[50],
                     ),
                   ],
-                ))
+                ),
+            ),
+            ListTile(
+              leading: Icon(Icons.assignment,
+                  size: 26, color: Color(0xff4C9BE2)),
+              title: fbUserNew != null ? Text("Logout")
+                  : Text("Login"),
+              onTap: () {
+                setState(() {
+                  if(fbUserNew == null){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Login(),
+                      ),
+                    );
+                  }
+                  else{
+                    authBloc.logoutFacebook();
+                    fbUserNew = null;
+                    name = null;
+                    email = null;
+                    picture = null;
+                    Favorite fav = new Favorite();
+                    fav.clearListProvince();
+                    Navigator.pop(context);
+                  }
+                });
+              },
+            ),
           ],
         ),
       ),
@@ -339,62 +396,62 @@ class _homePageState extends State<homePage> {
                         fit: BoxFit.fill,
                       ),
                     ),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            save < 1
-                                ? Container(
-                              width: 26,
-                              height: 24,
-                              margin: EdgeInsets.all(10.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                BorderRadius.all(Radius.circular(30.0)),
-                              ),
-                              child: IconButton(
-                                padding: EdgeInsets.all(0.0),
-                                iconSize: 19.0,
-                                icon: Icon(
-                                  Icons.favorite_border_rounded,
-                                  color: Color(0xff4C9BE2),
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    save = 1;
-                                  });
-                                },
-                              ),
-                            )
-                                : Container(
-                              width: 26,
-                              height: 24,
-                              margin: EdgeInsets.all(10.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                BorderRadius.all(Radius.circular(30.0)),
-                              ),
-                              child: IconButton(
-                                padding: EdgeInsets.all(0.0),
-                                iconSize: 19.0,
-                                icon: Icon(
-                                  Icons.favorite_rounded,
-                                  color: Color(0xff4C9BE2),
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    save = 0;
-                                  });
-                                },
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
+                    // child: Column(
+                    //   children: [
+                    //     Row(
+                    //       mainAxisAlignment: MainAxisAlignment.end,
+                    //       children: [
+                    //         save < 1
+                    //             ? Container(
+                    //           width: 26,
+                    //           height: 24,
+                    //           margin: EdgeInsets.all(10.0),
+                    //           decoration: BoxDecoration(
+                    //             color: Colors.white,
+                    //             borderRadius:
+                    //             BorderRadius.all(Radius.circular(30.0)),
+                    //           ),
+                    //           child: IconButton(
+                    //             padding: EdgeInsets.all(0.0),
+                    //             iconSize: 19.0,
+                    //             icon: Icon(
+                    //               Icons.favorite_border_rounded,
+                    //               color: Color(0xff4C9BE2),
+                    //             ),
+                    //             onPressed: () {
+                    //               setState(() {
+                    //                 save = 1;
+                    //               });
+                    //             },
+                    //           ),
+                    //         )
+                    //             : Container(
+                    //           width: 26,
+                    //           height: 24,
+                    //           margin: EdgeInsets.all(10.0),
+                    //           decoration: BoxDecoration(
+                    //             color: Colors.white,
+                    //             borderRadius:
+                    //             BorderRadius.all(Radius.circular(30.0)),
+                    //           ),
+                    //           child: IconButton(
+                    //             padding: EdgeInsets.all(0.0),
+                    //             iconSize: 19.0,
+                    //             icon: Icon(
+                    //               Icons.favorite_rounded,
+                    //               color: Color(0xff4C9BE2),
+                    //             ),
+                    //             onPressed: () {
+                    //               setState(() {
+                    //                 save = 0;
+                    //               });
+                    //             },
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     )
+                    //   ],
+                    // ),
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 5.0, top: 10.0),
@@ -402,7 +459,7 @@ class _homePageState extends State<homePage> {
                         //getProvinceContent[index].latin,
                         _provinceDisplay[index].latin,
                         style: TextStyle(
-                          color: Colors.grey[800],
+                          //color: Colors.grey[800],
                           fontSize: 15,
                         ),
                       ),
@@ -444,6 +501,7 @@ final List<String> imgList = [
   'assets/image/ODC.jpg',
   'assets/image/ST.jpg'
 ];
+
 final List<Widget> imageSliders = imgList
     .map((item) => Container(
           child: Container(

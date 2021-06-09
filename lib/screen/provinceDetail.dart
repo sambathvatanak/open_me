@@ -1,6 +1,14 @@
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:province_cambodia/model/provinceContent.dart';
+import 'package:province_cambodia/provider/authBloc.dart';
+import 'package:province_cambodia/provider/favoriteBloc.dart';
 import 'package:province_cambodia/screen/districtDetail.dart';
+
+import 'login.dart';
 
 class ProvinceDetail extends StatefulWidget {
   final provinceName;
@@ -10,6 +18,7 @@ class ProvinceDetail extends StatefulWidget {
   final north;
   final indexNum;
   final image;
+  final khmer;
 
   ProvinceDetail(
       {Key key,
@@ -19,7 +28,8 @@ class ProvinceDetail extends StatefulWidget {
       this.west,
       this.north,
       this.indexNum,
-      this.image})
+      this.image,
+      this.khmer})
       : super(key: key);
 
   @override
@@ -27,10 +37,42 @@ class ProvinceDetail extends StatefulWidget {
 }
 
 class _ProvinceDetailState extends State<ProvinceDetail> {
-  var save = 0;
+  bool isSaved = null;
+  var fbUserNew;
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  StreamSubscription<User> homeStateSubscription;
+
+  void initState() {
+    super.initState();
+    getUser();
+  }
+
+  @override
+  void dispose() {
+    homeStateSubscription.cancel();
+    super.dispose();
+  }
+
+
+  Future<void> getUser() async {
+    var authBloc = Provider.of<AuthBloc>(context,listen: false);
+    try{
+      homeStateSubscription = authBloc.currentUser.listen((fbUser) {
+        setState(() {
+          if (fbUser != null){
+            fbUserNew = fbUser;
+          }
+        });
+      });
+    }catch(e){
+      print(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    var fav = Provider.of<Favorite>(context);
+    isSaved = fav.saveProvince.contains(widget.provinceName);
     return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -39,32 +81,18 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
         ),
         body: ListView(
           children: [
-            _imageHeader(),
+            _imageHeader(isSaved,widget.provinceName,widget.khmer,widget.east,widget.west,widget.south,widget.north,widget.indexNum),
             _provinceTitle(),
             _provinceDetail(),
             _boundaryDetail(),
             _districtDetail(),
           ],
         )
-        // body: Center(
-        //   child: ElevatedButton(
-        //     onPressed: () {
-        //       Navigator.push(
-        //         context,
-        //         MaterialPageRoute(
-        //           builder: (context) => DistrictDetail(
-        //             index: 1,
-        //           ),
-        //         ),
-        //       );
-        //     },
-        //     child: Text('asd'),
-        //   ),
-        // ),
         );
   }
 
-  Widget _imageHeader() {
+  Widget _imageHeader(isSaved,text,khmer,east,west,south,north,index) {
+    var fav = Provider.of<Favorite>(context);
     return Stack(
       alignment: Alignment.center,
       children: <Widget>[
@@ -88,7 +116,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        save < 1
+                        isSaved == false || isSaved == null
                             ? Container(
                                 width: 42,
                                 height: 40,
@@ -107,7 +135,14 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
                                     ),
                                     onPressed: () {
                                       setState(() {
-                                        save = 1;
+                                        if(fbUserNew != null){
+                                          fav.addProvince(fbUserNew.displayName,fbUserNew.uid,text,khmer,east,west,south,north,index);
+                                        }else {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) => Login())
+                                          );
+                                        };
                                       });
                                     },
                                   ),
@@ -130,7 +165,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
                                   ),
                                   onPressed: () {
                                     setState(() {
-                                      save = 0;
+                                      fav.removeProvince(text,fbUserNew.uid);
                                     });
                                   },
                                 ),
@@ -176,7 +211,9 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
           ),
           Text(
             widget.provinceName,
-            style: TextStyle(fontSize: 26, fontWeight: FontWeight.w600, color: Colors.grey[800],),
+            style: TextStyle(fontSize: 26, fontWeight: FontWeight.w600,
+              //color: Colors.grey[800],
+            ),
           ),
         ],
       ),
@@ -221,7 +258,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w600,
-                          color: Colors.grey[800],
+                          //color: Colors.grey[800],
                         ),
                       ),
                     ),
@@ -297,7 +334,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 20,
-                      color: Colors.grey[800],
+                      //color: Colors.grey[800],
                     ),
                   ),
                 ),
@@ -329,7 +366,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 15,
-                          color: Colors.grey[800],
+                          //color: Colors.grey[800],
                         ),
                       ),
                     ),
@@ -352,7 +389,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 15,
-                          color: Colors.grey[800],
+                          //color: Colors.grey[800],
                         ),
                       ),
                     ),
@@ -415,7 +452,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 15,
-                          color: Colors.grey[800],
+                          //color: Colors.grey[800],
                         ),
                       ),
                     ),
@@ -439,7 +476,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 15,
-                          color: Colors.grey[800],
+                          //color: Colors.grey[800],
                         ),
                       ),
                     ),
@@ -536,7 +573,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: Colors.grey[800],
+                      //color: Colors.grey[800],
                     ),
                   ),
                 ],

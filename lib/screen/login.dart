@@ -1,5 +1,12 @@
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:province_cambodia/model/userProfile.dart';
+import 'package:province_cambodia/provider/authBloc.dart';
+import 'package:province_cambodia/screen/home.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -7,6 +14,28 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  UserData user = new UserData();
+  Map _userObj = {};
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  StreamSubscription<User> homeStateSubscription;
+
+  @override
+  void initState() {
+    var authBloc = Provider.of<AuthBloc>(context,listen: false);
+    homeStateSubscription = authBloc.currentUser.listen((fbUser) {
+      if (fbUser != null){
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => homePage())
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    homeStateSubscription.cancel();
+    super.dispose();
+  }
 
   Widget _entryField(String text){
     return Container(
@@ -45,7 +74,7 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Widget _logo(){
+  Widget _logo(String picture,bool isNetwork){
     return SafeArea(
       child: Column(
         children: <Widget>[
@@ -56,11 +85,11 @@ class _LoginState extends State<Login> {
             height: 120,
             width: 120,
             child: CircleAvatar(
-              backgroundImage: AssetImage('assets/image/KP.jpg'),
+              backgroundImage: isNetwork == true ? AssetImage(picture) : NetworkImage(picture),
             ),
           ),
           SizedBox(
-            height: 90,
+            height: 30,
           ),
         ],
       ),
@@ -132,6 +161,7 @@ class _LoginState extends State<Login> {
   }
 
   Widget _socialButton(){
+    var authBloc = Provider.of<AuthBloc>(context);
     return Container(
       child: Row(
         children: <Widget>[
@@ -140,14 +170,29 @@ class _LoginState extends State<Login> {
             icon: FaIcon(FontAwesomeIcons.facebook),
             iconSize: 40,
             color: Colors.blue[800],
-            onPressed: () {},
+            onPressed: () async {
+              // FacebookAuth.instance.login(
+              //     permissions: ["public_profile", "email"]).then((value) {
+              //   FacebookAuth.instance.getUserData().then((userData) {
+              //     setState(() {
+              //       //user.isLogin = true;
+              //       _userObj = userData;
+              //       user.setLogin(true,_userObj);
+              //     });
+              //   });
+              // });
+              authBloc.loginFacebook();
+            },
           ),
           SizedBox(width: 40),
           IconButton(
             icon: FaIcon(FontAwesomeIcons.google),
             iconSize: 40,
             color: Colors.blue[800],
-            onPressed: () {},
+            onPressed: () {
+              authBloc.signInWithGoogle()
+                  .then((User user){});
+            },
           ),
           SizedBox(width: 40),
           IconButton(
@@ -217,13 +262,16 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[200],
+      appBar: AppBar(
+        title: Text('User Login'),
+      ),
       body: SingleChildScrollView(
         child: Stack(
           children: <Widget>[
             Container(
               child: Column(
                 children: <Widget>[
-                  _logo(),
+                  _logo('assets/image/KP.jpg', true),
                   SizedBox(height: 30),
                   _emailPasswordWidget(),
                   _submitButton(),

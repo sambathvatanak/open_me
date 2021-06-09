@@ -34,7 +34,15 @@ dependencies:
   font_awesome_flutter: ^9.0.0
   carousel_slider: ^3.0.0
   flutter_screenutil: ^5.0.0
-  http: ^0.12.0+4
+  http: ^0.13.3
+  google_maps_flutter: ^2.0.6
+  firebase_core: ^1.2.1
+  cloud_firestore: ^2.2.1
+  http_parser: ^4.0.0
+  firebase_auth: ^1.3.0
+  flutter_facebook_auth: ^3.4.1
+  google_sign_in: ^5.0.4
+  flutter_login_facebook: ^1.0.1
 
 dev_dependencies:
   flutter_test:

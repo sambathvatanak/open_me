@@ -38,7 +38,6 @@ class _DistrictDetailState extends State<DistrictDetail> {
       ),
       body: ListView(
         children: [
-          _districtDetail(),
           Container(
             height: MediaQuery.of(context).size.height,
             child: Center(
