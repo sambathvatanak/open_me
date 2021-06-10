@@ -25,6 +25,7 @@ class _CommuneDetailState extends State<CommuneDetail> {
     fetchCommuneContent().then((value) {
       _commune.addAll(value);
       _communeDisplay = _commune;
+      print(_communeDisplay);
     });
   }
 
@@ -37,7 +38,7 @@ class _CommuneDetailState extends State<CommuneDetail> {
       ),
       body: Center(
         child: FutureBuilder(
-          future: fetchDistrictContent(),
+          future: fetchCommuneContent(),
           builder: (context, AsyncSnapshot snapshot) {
             if (!snapshot.hasData) {
               return Center(child: CircularProgressIndicator());
@@ -50,7 +51,7 @@ class _CommuneDetailState extends State<CommuneDetail> {
                       return _communeView(context, index, snapshot);
                     },
                   ),
-                  onRefresh: fetchDistrictContent,
+                  onRefresh: fetchCommuneContent,
                 ),
               );
             }

@@ -1,13 +1,10 @@
 import 'dart:async';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:province_cambodia/model/provinceContent.dart';
-import 'package:province_cambodia/model/userProfile.dart';
 import 'package:province_cambodia/provider/authBloc.dart';
 import 'package:province_cambodia/provider/favoriteBloc.dart';
 import 'package:province_cambodia/provider/themeChanger.dart';
@@ -30,7 +27,6 @@ class _homePageState extends State<homePage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   StreamSubscription<User> homeStateSubscription;
   var image;
-  UserData user = new UserData();
   int _page = 0;
   bool isSwitched = false;
   GlobalKey _bottomNavigationKey = GlobalKey();
@@ -162,18 +158,23 @@ class _homePageState extends State<homePage> {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.settings, size: 26, color: Color(0xff4C9BE2)),
-              title: Text("Settings"),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
               leading: Icon(Icons.contacts_rounded,
                   size: 26, color: Color(0xff4C9BE2)),
               title: Text("About"),
               onTap: () {
-                Navigator.pop(context);
+                showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: const Text('About'),
+                    content: const Text('This app is created by me'),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, 'OK'),
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ),
+                );
               },
             ),
             Container(

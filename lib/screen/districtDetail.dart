@@ -27,6 +27,7 @@ class _DistrictDetailState extends State<DistrictDetail> {
     fetchDistrictContent().then((value) {
       _district.addAll(value);
       _districtDisplay = _district;
+      print(_districtDisplay);
     });
   }
 

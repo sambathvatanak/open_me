@@ -178,6 +178,10 @@ class _ListProvinceState extends State<ListProvince> {
             indexNum: _provinceDisplay[index].code,
             image: pvc.getImage(_provinceDisplay[index].latin),
             khmer: _provinceDisplay[index].khmer,
+            description: _provinceDisplay[index].description,
+            district: _provinceDisplay[index].district,
+            commune: _provinceDisplay[index].commune,
+            village: _provinceDisplay[index].village,
           )),
           );
         }else{
@@ -206,7 +210,7 @@ class _ListProvinceState extends State<ListProvince> {
         child: Row(
           //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            _provinceImage(_provinceDisplay[index].latin, _provinceDisplay[index].khmer,_provinceDisplay[index].east,_provinceDisplay[index].west,_provinceDisplay[index].south,_provinceDisplay[index].north,_provinceDisplay[index].code),
+            _provinceImage(_provinceDisplay[index].latin, _provinceDisplay[index].khmer,_provinceDisplay[index].east,_provinceDisplay[index].west,_provinceDisplay[index].south,_provinceDisplay[index].north,_provinceDisplay[index].code,_provinceDisplay[index].description,_provinceDisplay[index].district,_provinceDisplay[index].commune,_provinceDisplay[index].village),
             Container(
               padding: EdgeInsets.only(left: 20.0, top: 8.0, bottom: 10.0),
               child: Column(
@@ -239,7 +243,7 @@ class _ListProvinceState extends State<ListProvince> {
                   Expanded(
                     flex: 1,
                     child: Text(
-                      'District: ' + _district.length.toString(),
+                      'District: ' + _provinceDisplay[index].district,
                       //snapshot.data[index]['districts'][index]['khmer'],
                       style: TextStyle(
                         //color: Colors.grey.shade600,
@@ -250,7 +254,7 @@ class _ListProvinceState extends State<ListProvince> {
                   Expanded(
                     flex: 1,
                     child: Text(
-                      'Commune: 20',
+                      'Commune: ' + _provinceDisplay[index].commune,
                       style: TextStyle(
                         //color: Colors.grey.shade600,
                         fontSize: 15,
@@ -260,7 +264,7 @@ class _ListProvinceState extends State<ListProvince> {
                   Expanded(
                     flex: 1,
                     child: Text(
-                      'Village: 30',
+                      'Village: ' + _provinceDisplay[index].village,
                       style: TextStyle(
                         //color: Colors.grey.shade600,
                         fontSize: 15,
@@ -276,7 +280,7 @@ class _ListProvinceState extends State<ListProvince> {
     );
   }
 
-  Widget _provinceImage(text, khmer,east ,west, south, north, index) {
+  Widget _provinceImage(text, khmer,east ,west, south, north, index, desc, district, commune, village) {
     var fav = Provider.of<Favorite>(context);
     image = pvc.getImage(text);
     return Stack(
@@ -319,7 +323,7 @@ class _ListProvinceState extends State<ListProvince> {
                           ),
                           onPressed: () {
                             if(fbUserNew != null){
-                              fav.addProvince(fbUserNew.displayName,fbUserNew.uid,text,khmer,east,west,south,north,index);
+                              fav.addProvince(fbUserNew.displayName,fbUserNew.uid,text,khmer,east,west,south,north,index,desc,district,commune,village);
                             }else {
                               Navigator.of(context).push(
                                   MaterialPageRoute(

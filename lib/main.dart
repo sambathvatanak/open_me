@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<AuthBloc>(
             create: (_) => AuthBloc()),
         ChangeNotifierProvider<Favorite>(
-            create: (_) => Favorite())
+            create: (_) => Favorite()),
         // ChangeNotifierProvider<UserBloc>(create: (_) => UserBloc())
       ],
       child: Builder(

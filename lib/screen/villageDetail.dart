@@ -35,7 +35,7 @@ class _VillageDetailState extends State<VillageDetail> {
       appBar: AppBar(title: Text('Village Detail')),
       body: Center(
         child: FutureBuilder(
-          future: fetchDistrictContent(),
+          future: fetchVillageContent(),
           builder: (context, AsyncSnapshot snapshot) {
             if (!snapshot.hasData) {
               return Center(child: CircularProgressIndicator());
@@ -48,7 +48,7 @@ class _VillageDetailState extends State<VillageDetail> {
                       return _villageView(context, index, snapshot);
                     },
                   ),
-                  onRefresh: fetchDistrictContent,
+                  onRefresh: fetchVillageContent,
                 ),
               );
             }

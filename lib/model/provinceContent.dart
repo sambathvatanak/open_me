@@ -10,20 +10,28 @@ class ProvinceContent{
   String code;
   String khmer;
   String latin;
+  String district;
+  String commune;
+  String village;
   String east;
   String west;
   String south;
   String north;
+  String description;
   static int index;
   static int indexCommune;
   static int indexVillage;
 
-  ProvinceContent({this.image, this.code, this.khmer, this.latin, this.east, this.west, this.north, this.south});
+  ProvinceContent({this.image, this.code, this.khmer, this.latin, this.district, this.commune, this.village, this.description, this.east, this.west, this.north, this.south});
 
   ProvinceContent.fromJsonProvince(Map<String, dynamic> json){
     code = json['code'].toString();
     khmer = json['khmer'].toString();
     latin = json['latin'].toString();
+    district = json['districtNum'].toString();
+    commune = json['communeNum'].toString();
+    village = json['villageNum'].toString();
+    description = json['description'].toString();
     east = json['boundary']['east'].toString();
     west = json['boundary']['west'].toString();
     north = json['boundary']['north'].toString();
@@ -116,7 +124,7 @@ class ProvinceContent{
 ProvinceContent pvc = ProvinceContent();
 
 Future<List<ProvinceContent>> fetchProvinceContent() async {
-  var url = ('https://raw.githubusercontent.com/sambathvatanak/province_cambodia/master/assets/data/cambodia_gazetteer.json');
+  var url = ('https://raw.githubusercontent.com/sambathvatanak/province_cambodia/master/assets/cambodia_gazetteer.json');
   var response = await http.get(Uri.parse(url));
   // ignore: deprecated_member_use
   var province = List<ProvinceContent>();

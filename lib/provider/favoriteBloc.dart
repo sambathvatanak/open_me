@@ -6,12 +6,12 @@ class Favorite with ChangeNotifier{
    String userUID;
    final List<String> saveProvince = List<String>();
 
-   addProvince(String name, String uid, String latin, String khmer, String east, String west, String south, String north, String index){
+   addProvince(String name, String uid, String latin, String khmer, String east, String west, String south, String north, String index, String desc, String district, String commune, String village){
       saveProvince.add(latin);
       var collection = FirebaseFirestore.instance.collection('users');
       collection
           .doc(latin+uid)
-          .set({"uid": uid,"name": name, "latin": latin, "khmer": khmer, "east": east, "west": west, "south": south, "north": north, "index": index})
+          .set({"uid": uid,"name": name, "latin": latin, "khmer": khmer, "east": east, "west": west, "south": south, "north": north, "index": index, "desc": desc, "district": district, "commune": commune, "village": village})
           .then((_) => print('Added'))
           .catchError((error) => print('Add failed: $error'));
       notifyListeners();

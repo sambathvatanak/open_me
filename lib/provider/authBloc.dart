@@ -1,14 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:province_cambodia/model/userProfile.dart';
 import 'package:province_cambodia/service/authService.dart';
 import 'package:flutter/material.dart';
 
 class AuthBloc with ChangeNotifier{
   final authService = AuthService();
   final fb = FacebookLogin();
-  final user = UserData();
   User _user;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final _auth = FirebaseAuth.instance;

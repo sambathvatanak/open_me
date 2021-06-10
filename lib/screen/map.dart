@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 class ProvinceMap extends StatefulWidget {
 
@@ -30,15 +30,6 @@ class _ProvinceMapState extends State<ProvinceMap> {
                           ];
   @override
   void initState() {
-    // firestore.collection("users").add(
-    // {
-    //     "name" : "john",
-    //     "age" : 50,
-    //     "email" : "example@example.com",
-    //     "address" : {
-    //     "street" : "street 24",
-    //     "city" : "new york"
-    // }});
     addPoints();
     List<Polygon> addPolygon = [
       Polygon(
@@ -47,7 +38,7 @@ class _ProvinceMapState extends State<ProvinceMap> {
         consumeTapEvents: true,
         strokeColor: Colors.grey,
         strokeWidth: 1,
-        fillColor: Colors.blueAccent,
+        fillColor: Colors.green[300],
       ),
     ];
     //print(addPolygon);
@@ -77,18 +68,88 @@ class _ProvinceMapState extends State<ProvinceMap> {
       //     'Map',
       //   ),
       // ),
-      body: GoogleMap(
-        // markers: Set.from(
-        //   markers,
-        // ),
-        initialCameraPosition: CameraPosition(target: latlng, zoom: 5.0),
-        mapType: MapType.normal,
-        zoomGesturesEnabled: true,
-        scrollGesturesEnabled: true,
-        myLocationButtonEnabled: false,
-        onMapCreated: (GoogleMapController controller) {},
-        polygons: polygon,
-      ),
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          GoogleMap(
+            // markers: Set.from(
+            //   markers,
+            // ),
+            initialCameraPosition: CameraPosition(target: latlng, zoom: 5.0),
+            mapType: MapType.normal,
+            zoomGesturesEnabled: true,
+            scrollGesturesEnabled: true,
+            myLocationButtonEnabled: false,
+            onMapCreated: (GoogleMapController controller) async {
+              mapController = controller;
+              String value = await DefaultAssetBundle.of(context)
+                  .loadString('assets/data/map_style.json');
+              mapController.setMapStyle(value);
+            },
+            polygons: polygon,
+          ),
+          buildFloatingSearchBar(),
+        ],
+      )
     );
   }
+  Widget buildFloatingSearchBar() {
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
+    return FloatingSearchBar(
+      hint: 'Search...',
+      scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
+      transitionDuration: const Duration(milliseconds: 800),
+      transitionCurve: Curves.easeInOut,
+      physics: const BouncingScrollPhysics(),
+      axisAlignment: isPortrait ? 0.0 : -1.0,
+      openAxisAlignment: 0.0,
+      width: isPortrait ? 600 : 500,
+      debounceDelay: const Duration(milliseconds: 500),
+      onQueryChanged: (query) {
+        // Call your model, bloc, controller here.
+      },
+      // Specify a custom transition to be used for
+      // animating between opened and closed stated.
+      transition: CircularFloatingSearchBarTransition(),
+      actions: [
+        FloatingSearchBarAction(
+          showIfOpened: false,
+          child: CircularButton(
+            icon: const Icon(Icons.place),
+            onPressed: () {},
+          ),
+        ),
+        FloatingSearchBarAction.searchToClear(
+          showIfClosed: false,
+        ),
+      ],
+      builder: (context, transition) {
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Material(
+            color: Colors.white,
+            elevation: 4.0,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: Colors.accents.map((color) {
+                return Container(height: 112, color: color);
+              }).toList(),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // Future<void> _goToPlace(Place place) async {
+  //   final GoogleMapController controller = await _mapController.future;
+  //   controller.animateCamera(
+  //     CameraUpdate.newCameraPosition(
+  //       CameraPosition(
+  //           target: LatLng(
+  //               place.geometry.location.lat, place.geometry.location.lng),
+  //           zoom: 14.0),
+  //     ),
+  //   );
 }

@@ -1,10 +1,8 @@
 import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:province_cambodia/model/userProfile.dart';
 import 'package:province_cambodia/provider/authBloc.dart';
 import 'package:province_cambodia/screen/home.dart';
 
@@ -14,7 +12,6 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  UserData user = new UserData();
   Map _userObj = {};
   final FirebaseAuth auth = FirebaseAuth.instance;
   StreamSubscription<User> homeStateSubscription;

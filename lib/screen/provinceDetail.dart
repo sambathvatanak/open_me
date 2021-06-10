@@ -19,18 +19,12 @@ class ProvinceDetail extends StatefulWidget {
   final indexNum;
   final image;
   final khmer;
+  final description;
+  final district;
+  final commune;
+  final village;
 
-  ProvinceDetail(
-      {Key key,
-      this.provinceName,
-      this.east,
-      this.south,
-      this.west,
-      this.north,
-      this.indexNum,
-      this.image,
-      this.khmer})
-      : super(key: key);
+  ProvinceDetail({Key key, this.provinceName, this.east, this.south, this.west, this.north, this.indexNum, this.image, this.khmer, this.description,this.district,this.village,this.commune}) : super(key: key);
 
   @override
   _ProvinceDetailState createState() => _ProvinceDetailState();
@@ -81,7 +75,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
         ),
         body: ListView(
           children: [
-            _imageHeader(isSaved,widget.provinceName,widget.khmer,widget.east,widget.west,widget.south,widget.north,widget.indexNum),
+            _imageHeader(isSaved,widget.provinceName,widget.khmer,widget.east,widget.west,widget.south,widget.north,widget.indexNum,widget.description,widget.district,widget.commune,widget.village),
             _provinceTitle(),
             _provinceDetail(),
             _boundaryDetail(),
@@ -91,7 +85,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
         );
   }
 
-  Widget _imageHeader(isSaved,text,khmer,east,west,south,north,index) {
+  Widget _imageHeader(isSaved,text,khmer,east,west,south,north,index,desc,district,commune,village) {
     var fav = Provider.of<Favorite>(context);
     return Stack(
       alignment: Alignment.center,
@@ -136,7 +130,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
                                     onPressed: () {
                                       setState(() {
                                         if(fbUserNew != null){
-                                          fav.addProvince(fbUserNew.displayName,fbUserNew.uid,text,khmer,east,west,south,north,index);
+                                          fav.addProvince(fbUserNew.displayName,fbUserNew.uid,text,khmer,east,west,south,north,index,desc,district,commune,village);
                                         }else {
                                           Navigator.of(context).push(
                                               MaterialPageRoute(
@@ -279,8 +273,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
                 child: Container(
                   margin: EdgeInsets.all(12.0),
                   width: MediaQuery.of(context).size.width,
-                  child: Text(
-                    'Banteay Meanchey is a province of Cambodia located in the far northwest. It borders the provinces of Oddar Meanchey and Siem Reap to the east, Battambang to the south, and shares an international border with Thailand to the west. Its capital and largest city is Serei Saophoan.',
+                  child: Text(widget.description,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,

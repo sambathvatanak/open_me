@@ -109,6 +109,10 @@ class _saveFavoriteState extends State<saveFavorite> {
             indexNum: docs[index]['index'],
             image: pvc.getImage(docs[index]['latin']),
             khmer: docs[index]['khmer'],
+            description: docs[index]['desc'],
+            district: docs[index]['district'],
+            commune: docs[index]['commune'],
+            village: docs[index]['village'],
           )),
           );
         }else{
@@ -137,7 +141,7 @@ class _saveFavoriteState extends State<saveFavorite> {
         child: Row(
           //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            _provinceImage(docs[index]['latin'], docs[index]['khmer'], docs[index]['east'],docs[index]['west'],docs[index]['south'],docs[index]['north'],docs[index]['index']),
+            _provinceImage(docs[index]['latin'], docs[index]['khmer'], docs[index]['east'],docs[index]['west'],docs[index]['south'],docs[index]['north'],docs[index]['index'],docs[index]['desc'],docs[index]['district'],docs[index]['commune'],docs[index]['village']),
             Container(
               padding: EdgeInsets.only(left: 20.0, top: 8.0, bottom: 10.0),
               child: Column(
@@ -208,7 +212,7 @@ class _saveFavoriteState extends State<saveFavorite> {
     );
   }
 
-  Widget _provinceImage(text, khmer, east, west, south, north, index) {
+  Widget _provinceImage(text, khmer, east, west, south, north, index, desc, district, commune, village) {
     var fav = Provider.of<Favorite>(context);
     image = pvc.getImage(text);
     return Stack(
@@ -250,7 +254,7 @@ class _saveFavoriteState extends State<saveFavorite> {
                             color: Color(0xff4C9BE2),
                           ),
                           onPressed: () {
-                            fav.addProvince(fbUserNew.displayName,fbUserNew.uid,text,khmer,east,west,south,north,index);
+                            fav.addProvince(fbUserNew.displayName,fbUserNew.uid,text,khmer,east,west,south,north,index,desc,district,commune,village);
                           },
                         ),
                       )
