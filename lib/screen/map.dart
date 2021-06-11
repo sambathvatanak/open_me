@@ -30,20 +30,21 @@ class _ProvinceMapState extends State<ProvinceMap> {
                           ];
   @override
   void initState() {
-    addPoints();
-    List<Polygon> addPolygon = [
-      Polygon(
-        polygonId: PolygonId('Cambodia'),
-        points: point,
-        consumeTapEvents: true,
-        strokeColor: Colors.grey,
-        strokeWidth: 1,
-        fillColor: Colors.green[300],
-      ),
-    ];
-    //print(addPolygon);
-    polygon.addAll(addPolygon);
-    super.initState();
+    latlng = LatLng(double.parse(widget.lat), double.parse(widget.lng));
+    // addPoints();
+    // List<Polygon> addPolygon = [
+    //   Polygon(
+    //     polygonId: PolygonId('Cambodia'),
+    //     points: point,
+    //     consumeTapEvents: true,
+    //     strokeColor: Colors.grey,
+    //     strokeWidth: 1,
+    //     fillColor: Colors.green[300],
+    //   ),
+    // ];
+    // //print(addPolygon);
+    // polygon.addAll(addPolygon);
+    // super.initState();
   }
 
   void addPoints()
@@ -63,11 +64,11 @@ class _ProvinceMapState extends State<ProvinceMap> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(
-      //     'Map',
-      //   ),
-      // ),
+      appBar: AppBar(
+        title: Text(
+          'Map',
+        ),
+      ),
       body: Stack(
         fit: StackFit.expand,
         children: [
@@ -75,7 +76,7 @@ class _ProvinceMapState extends State<ProvinceMap> {
             // markers: Set.from(
             //   markers,
             // ),
-            initialCameraPosition: CameraPosition(target: latlng, zoom: 5.0),
+            initialCameraPosition: CameraPosition(target: latlng, zoom: 8.0),
             mapType: MapType.normal,
             zoomGesturesEnabled: true,
             scrollGesturesEnabled: true,
@@ -107,6 +108,7 @@ class _ProvinceMapState extends State<ProvinceMap> {
       width: isPortrait ? 600 : 500,
       debounceDelay: const Duration(milliseconds: 500),
       onQueryChanged: (query) {
+        print(query);
         // Call your model, bloc, controller here.
       },
       // Specify a custom transition to be used for
@@ -133,7 +135,7 @@ class _ProvinceMapState extends State<ProvinceMap> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: Colors.accents.map((color) {
-                return Container(height: 112, color: color);
+                return Container(height: 90, color: color);
               }).toList(),
             ),
           ),

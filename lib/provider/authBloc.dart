@@ -8,7 +8,8 @@ class AuthBloc with ChangeNotifier{
   final authService = AuthService();
   final fb = FacebookLogin();
   User _user;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final googleSignIn = GoogleSignIn();
+  bool _isSigningIn;
   final _auth = FirebaseAuth.instance;
 
   Stream<User> get currentUser => authService.currentUser;
@@ -47,22 +48,42 @@ class AuthBloc with ChangeNotifier{
     notifyListeners();
   }
 
-  Future<User> signInWithGoogle() async {
-    GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
-    GoogleSignInAuthentication googleSignInAuthentication =
-    await googleSignInAccount.authentication;
-    AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleSignInAuthentication.accessToken,
-      idToken: googleSignInAuthentication.idToken,
-    );
-    UserCredential authResult = await _auth.signInWithCredential(credential);
-    _user = authResult.user;
-    assert(!_user.isAnonymous);
-    assert(await _user.getIdToken() != null);
-    User currentUser = _auth.currentUser;
-    assert(_user.uid == currentUser.uid);
-    print("User Name: ${_user.displayName}");
-    print("User Email ${_user.email}");
+  GoogleSignInProvider() {
+    _isSigningIn = false;
   }
+
+  bool get isSigningIn => _isSigningIn;
+
+  set isSigningIn(bool isSigningIn) {
+    _isSigningIn = isSigningIn;
+    notifyListeners();
+  }
+
+  Future loginGoogle() async {
+    isSigningIn = true;
+
+    final user = await googleSignIn.signIn();
+    if (user == null) {
+      isSigningIn = false;
+      return;
+    } else {
+      final googleAuth = await user.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
+
+      isSigningIn = false;
+    }
+  }
+
+  void logoutGoogle() async {
+    await googleSignIn.disconnect();
+    FirebaseAuth.instance.signOut();
+  }
+
 }
 

@@ -7,6 +7,7 @@ import 'package:province_cambodia/model/provinceContent.dart';
 import 'package:province_cambodia/provider/authBloc.dart';
 import 'package:province_cambodia/provider/favoriteBloc.dart';
 import 'package:province_cambodia/screen/districtDetail.dart';
+import 'package:province_cambodia/screen/map.dart';
 
 import 'login.dart';
 
@@ -175,41 +176,52 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
   }
 
   Widget _provinceTitle() {
-    return Container(
-      margin: EdgeInsets.all(10.0),
-      height: 60,
-      decoration: BoxDecoration(
-        color: Theme.of(context).bottomAppBarColor,
-        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-        boxShadow: <BoxShadow>[
-          //box shadow of login button
-          BoxShadow(
-            color: Colors.grey.shade200,
-            offset: Offset(2, 4),
-            blurRadius: 5,
-            spreadRadius: 2,
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-              margin: EdgeInsets.only(left: 10),
-              child: Icon(
-                Icons.location_on,
-                size: 35,
-                color: Color(0xff4C9BE2),
-              )),
-          SizedBox(
-            width: 20,
-          ),
-          Text(
-            widget.provinceName,
-            style: TextStyle(fontSize: 26, fontWeight: FontWeight.w600,
-              //color: Colors.grey[800],
+    return GestureDetector(
+      onTap: (){
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ProvinceMap(
+              lat: '13.79',
+              lng: '105.005800',
+            ),),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.all(10.0),
+        height: 60,
+        decoration: BoxDecoration(
+          color: Theme.of(context).bottomAppBarColor,
+          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          boxShadow: <BoxShadow>[
+            //box shadow of login button
+            BoxShadow(
+              color: Colors.grey.shade200,
+              offset: Offset(2, 4),
+              blurRadius: 5,
+              spreadRadius: 2,
             ),
-          ),
-        ],
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+                margin: EdgeInsets.only(left: 10),
+                child: Icon(
+                  Icons.location_on,
+                  size: 35,
+                  color: Color(0xff4C9BE2),
+                )),
+            SizedBox(
+              width: 20,
+            ),
+            Text(
+              widget.provinceName,
+              style: TextStyle(fontSize: 26, fontWeight: FontWeight.w600,
+                //color: Colors.grey[800],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

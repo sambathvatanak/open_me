@@ -48,12 +48,14 @@ class _DistrictDetailState extends State<DistrictDetail> {
                   if (!snapshot.hasData) {
                     return Center(child: CircularProgressIndicator());
                   } else {
+                    print('district');
                     return Container(
                       child: RefreshIndicator(
                         child: ListView.builder(
                           itemCount: _districtDisplay.length,
                           itemBuilder: (BuildContext context, index) {
-                            return _districtView(context, index, snapshot);
+                            return _districtView(context, index, snapshot
+                            );
                           },
                         ),
                         onRefresh: fetchDistrictContent,

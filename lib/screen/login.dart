@@ -187,8 +187,7 @@ class _LoginState extends State<Login> {
             iconSize: 40,
             color: Colors.blue[800],
             onPressed: () {
-              authBloc.signInWithGoogle()
-                  .then((User user){});
+              authBloc.loginGoogle();
             },
           ),
           SizedBox(width: 40),

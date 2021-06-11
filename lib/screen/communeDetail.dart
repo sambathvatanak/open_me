@@ -43,15 +43,14 @@ class _CommuneDetailState extends State<CommuneDetail> {
             if (!snapshot.hasData) {
               return Center(child: CircularProgressIndicator());
             } else {
+              print('commune');
               return Container(
-                child: RefreshIndicator(
-                  child: ListView.builder(
-                    itemCount: _communeDisplay.length,
-                    itemBuilder: (BuildContext context, index) {
-                      return _communeView(context, index, snapshot);
-                    },
-                  ),
-                  onRefresh: fetchCommuneContent,
+                child: ListView.builder(
+                  itemCount: _communeDisplay.length,
+                  itemBuilder: (BuildContext context, index) {
+                    print(_communeDisplay.length);
+                    return _communeView(context, index, snapshot);
+                  },
                 ),
               );
             }
