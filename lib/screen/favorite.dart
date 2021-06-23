@@ -113,6 +113,8 @@ class _saveFavoriteState extends State<saveFavorite> {
             district: docs[index]['district'],
             commune: docs[index]['commune'],
             village: docs[index]['village'],
+            lat: docs[index]['lat'],
+            lng: docs[index]['lng'],
           )),
           );
         }else{
@@ -141,7 +143,7 @@ class _saveFavoriteState extends State<saveFavorite> {
         child: Row(
           //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            _provinceImage(docs[index]['latin'], docs[index]['khmer'], docs[index]['east'],docs[index]['west'],docs[index]['south'],docs[index]['north'],docs[index]['index'],docs[index]['desc'],docs[index]['district'],docs[index]['commune'],docs[index]['village']),
+            _provinceImage(docs[index]['latin'], docs[index]['khmer'], docs[index]['east'],docs[index]['west'],docs[index]['south'],docs[index]['north'],docs[index]['index'],docs[index]['desc'],docs[index]['district'],docs[index]['commune'],docs[index]['village'],docs[index]['lat'],docs[index]['lng']),
             Container(
               padding: EdgeInsets.only(left: 20.0, top: 8.0, bottom: 10.0),
               child: Column(
@@ -212,7 +214,7 @@ class _saveFavoriteState extends State<saveFavorite> {
     );
   }
 
-  Widget _provinceImage(text, khmer, east, west, south, north, index, desc, district, commune, village) {
+  Widget _provinceImage(text, khmer, east, west, south, north, index, desc, district, commune, village, lat, lng) {
     var fav = Provider.of<Favorite>(context);
     image = pvc.getImage(text);
     return Stack(
@@ -254,7 +256,7 @@ class _saveFavoriteState extends State<saveFavorite> {
                             color: Color(0xff4C9BE2),
                           ),
                           onPressed: () {
-                            fav.addProvince(fbUserNew.displayName,fbUserNew.uid,text,khmer,east,west,south,north,index,desc,district,commune,village);
+                            fav.addProvince(fbUserNew.displayName,fbUserNew.uid,text,khmer,east,west,south,north,index,desc,district,commune,village,lat,lng);
                           },
                         ),
                       )

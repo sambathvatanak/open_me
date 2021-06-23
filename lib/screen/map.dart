@@ -20,6 +20,8 @@ class _ProvinceMapState extends State<ProvinceMap> {
   List<LatLng> point = [];
   GoogleMapController mapController;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  var lat;
+  var lng;
   static const List cam = [
                             [103.4972799011397,10.632555446815928],[103.09068973186724,11.153660590047165],[102.5849324890267,12.186594956913282],
                             [102.348099399833,13.394247341358223],[102.98842207236163,14.225721136934467],[104.28141808473661,14.416743068901367],
@@ -29,8 +31,14 @@ class _ProvinceMapState extends State<ProvinceMap> {
                             [104.33433475140347,10.48654368737523],[103.4972799011397,10.632555446815928]
                           ];
   @override
-  void initState() {
-    latlng = LatLng(double.parse(widget.lat), double.parse(widget.lng));
+  void initState() {  
+    if(widget.lat == null && widget.lng == null){
+      //print('asd');
+    }else{
+      lat = double.parse(widget.lat); 
+      lng = double.parse(widget.lng);
+      latlng = LatLng(lat,lng);
+    }
     // addPoints();
     // List<Polygon> addPolygon = [
     //   Polygon(
@@ -76,7 +84,7 @@ class _ProvinceMapState extends State<ProvinceMap> {
             // markers: Set.from(
             //   markers,
             // ),
-            initialCameraPosition: CameraPosition(target: latlng, zoom: 8.0),
+            initialCameraPosition: CameraPosition(target: latlng, zoom: 10.0),
             mapType: MapType.normal,
             zoomGesturesEnabled: true,
             scrollGesturesEnabled: true,

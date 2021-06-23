@@ -1,9 +1,5 @@
 import 'dart:convert';
-import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
-import 'package:province_cambodia/provider/favoriteBloc.dart';
 
 class ProvinceContent{
   String image;
@@ -18,6 +14,8 @@ class ProvinceContent{
   String south;
   String north;
   String description;
+  String lat;
+  String lng;
   static int index;
   static int indexCommune;
   static int indexVillage;
@@ -36,6 +34,8 @@ class ProvinceContent{
     west = json['boundary']['west'].toString();
     north = json['boundary']['north'].toString();
     south = json['boundary']['south'].toString();
+    lat = json['lat'].toString();
+    lng = json['lng'].toString();
   }
 
   ProvinceContent.fromJsonOther(Map<String, dynamic> json){

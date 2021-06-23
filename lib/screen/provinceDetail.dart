@@ -24,8 +24,10 @@ class ProvinceDetail extends StatefulWidget {
   final district;
   final commune;
   final village;
+  final lat;
+  final lng;
 
-  ProvinceDetail({Key key, this.provinceName, this.east, this.south, this.west, this.north, this.indexNum, this.image, this.khmer, this.description,this.district,this.village,this.commune}) : super(key: key);
+  ProvinceDetail({Key key, this.provinceName, this.east, this.south, this.west, this.north, this.indexNum, this.image, this.khmer, this.description,this.district,this.village,this.commune,this.lat,this.lng}) : super(key: key);
 
   @override
   _ProvinceDetailState createState() => _ProvinceDetailState();
@@ -76,7 +78,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
         ),
         body: ListView(
           children: [
-            _imageHeader(isSaved,widget.provinceName,widget.khmer,widget.east,widget.west,widget.south,widget.north,widget.indexNum,widget.description,widget.district,widget.commune,widget.village),
+            _imageHeader(isSaved,widget.provinceName,widget.khmer,widget.east,widget.west,widget.south,widget.north,widget.indexNum,widget.description,widget.district,widget.commune,widget.village,widget.lat,widget.lng),
             _provinceTitle(),
             _provinceDetail(),
             _boundaryDetail(),
@@ -86,7 +88,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
         );
   }
 
-  Widget _imageHeader(isSaved,text,khmer,east,west,south,north,index,desc,district,commune,village) {
+  Widget _imageHeader(isSaved,text,khmer,east,west,south,north,index,desc,district,commune,village,lat,lng) {
     var fav = Provider.of<Favorite>(context);
     return Stack(
       alignment: Alignment.center,
@@ -131,7 +133,7 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
                                     onPressed: () {
                                       setState(() {
                                         if(fbUserNew != null){
-                                          fav.addProvince(fbUserNew.displayName,fbUserNew.uid,text,khmer,east,west,south,north,index,desc,district,commune,village);
+                                          fav.addProvince(fbUserNew.displayName,fbUserNew.uid,text,khmer,east,west,south,north,index,desc,district,commune,village,lat,lng);
                                         }else {
                                           Navigator.of(context).push(
                                               MaterialPageRoute(
@@ -181,9 +183,10 @@ class _ProvinceDetailState extends State<ProvinceDetail> {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => ProvinceMap(
-              lat: '13.79',
-              lng: '105.005800',
-            ),),
+              lat: widget.lat,
+              lng: widget.lng,
+            ),)
+          ,
         );
       },
       child: Container(

@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:province_cambodia/model/provinceContent.dart';
 import 'package:province_cambodia/provider/authBloc.dart';
 import 'package:province_cambodia/provider/favoriteBloc.dart';
-import 'package:province_cambodia/screen/home.dart';
 import 'package:province_cambodia/screen/login.dart';
 import 'package:province_cambodia/screen/provinceDetail.dart';
 
@@ -182,6 +180,8 @@ class _ListProvinceState extends State<ListProvince> {
             district: _provinceDisplay[index].district,
             commune: _provinceDisplay[index].commune,
             village: _provinceDisplay[index].village,
+            lat: _provinceDisplay[index].lat,
+            lng: _provinceDisplay[index].lng,
           )),
           );
         }else{
@@ -210,7 +210,7 @@ class _ListProvinceState extends State<ListProvince> {
         child: Row(
           //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            _provinceImage(_provinceDisplay[index].latin, _provinceDisplay[index].khmer,_provinceDisplay[index].east,_provinceDisplay[index].west,_provinceDisplay[index].south,_provinceDisplay[index].north,_provinceDisplay[index].code,_provinceDisplay[index].description,_provinceDisplay[index].district,_provinceDisplay[index].commune,_provinceDisplay[index].village),
+            _provinceImage(_provinceDisplay[index].latin, _provinceDisplay[index].khmer,_provinceDisplay[index].east,_provinceDisplay[index].west,_provinceDisplay[index].south,_provinceDisplay[index].north,_provinceDisplay[index].code,_provinceDisplay[index].description,_provinceDisplay[index].district,_provinceDisplay[index].commune,_provinceDisplay[index].village,_provinceDisplay[index].lat,_provinceDisplay[index].lng),
             Container(
               padding: EdgeInsets.only(left: 20.0, top: 8.0, bottom: 10.0),
               child: Column(
@@ -280,7 +280,7 @@ class _ListProvinceState extends State<ListProvince> {
     );
   }
 
-  Widget _provinceImage(text, khmer,east ,west, south, north, index, desc, district, commune, village) {
+  Widget _provinceImage(text, khmer,east ,west, south, north, index, desc, district, commune, village, lat, lng) {
     var fav = Provider.of<Favorite>(context);
     image = pvc.getImage(text);
     return Stack(
@@ -323,7 +323,7 @@ class _ListProvinceState extends State<ListProvince> {
                           ),
                           onPressed: () {
                             if(fbUserNew != null){
-                              fav.addProvince(fbUserNew.displayName,fbUserNew.uid,text,khmer,east,west,south,north,index,desc,district,commune,village);
+                              fav.addProvince(fbUserNew.displayName,fbUserNew.uid,text,khmer,east,west,south,north,index,desc,district,commune,village,lat,lng);
                             }else {
                               Navigator.of(context).push(
                                   MaterialPageRoute(
